@@ -2,12 +2,12 @@ import unittest
 import numpy
 
 class Perceptron:
-    #Recibe como peso un arreglo y como bias un entero
+    #Recibe como peso un arreglo y como bias un double
     def __init__(self,weight,bias):
-        self.w= weight
+        self.w = weight
         self.b = bias
 
-    #Recibe como input un arreglo con los inputs.
+    #Recibe como input un arreglo con los inputs binarios
     def feed(self, input):
         a = numpy.asarray(self.w)
         b = numpy.asmatrix(input).transpose()
@@ -33,7 +33,7 @@ class SumGate:
         return [resres,carry]
 
 
-#Cosas globales para test
+#Cosas globales para testing de perceptrones
 
 pand = Perceptron([2,2],-3)
 por = Perceptron([2,2],-1)
@@ -42,6 +42,10 @@ cerocero = [0,0]
 cerouno = [0,1]
 unouno = [1,1]
 unocero = [1,0]
+
+pnot = Perceptron([-2],1)
+
+
 
 class TestingPerceptrons(unittest.TestCase):
 
@@ -62,6 +66,10 @@ class TestingPerceptrons(unittest.TestCase):
         self.assertEqual(pnand.feed(cerouno),1)
         self.assertEqual(pnand.feed(unouno),0)
         self.assertEqual(pnand.feed(unocero),1)
+
+    def testing_not(self):
+        self.assertEqual(pnot.feed([0]),1)
+        self.assertEqual(pnot.feed([1]),0)
 
 #Sumador para testing
 
