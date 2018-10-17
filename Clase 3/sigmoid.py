@@ -1,10 +1,10 @@
-import random
+import math
 import numpy
+import random
 
+class Sigmoid:
 
-class LPerceptron:
-
-    # int -> LPerceptron
+    # int -> Sigmoid
     #Recibe la cantidad de inputs que recibirá el perceptron
     def __init__(self,ninputs):
         self.weight = []
@@ -18,10 +18,7 @@ class LPerceptron:
         w = numpy.asarray(self.weight)
         x = numpy.asarray(input)
         z = numpy.dot(w,x) + self.bias
-        if(z <= 0):
-            return 0
-        else:
-            return 1
+        return 1/(1+math.exp(-z))
 
     # [x1 x2 ... xk] int(0,1) -> None
     #Recibe un input para el perceptron y el output esperado
