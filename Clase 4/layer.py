@@ -10,7 +10,7 @@ class Layer:
         for n in range(nneurons):
             self.myneurons.append(sg.Sigmoid(kinputs))
 
-    # [float ... float] -> [float ... float]
+    # List<Float> -> List<Float>
     # Receives a python vector as input, returns the outputs of every neuron as vector
     def feed(self, vectorinput):
         layeroutput = []
@@ -18,7 +18,7 @@ class Layer:
             layeroutput.append(neuron.feed(vectorinput))
         return layeroutput
 
-    # None -> [float ... float]
+    # None -> List<Float>
     # Returns all the outputs of the layer
     def getOutputs(self):
         outputs = []
@@ -26,7 +26,7 @@ class Layer:
             outputs.append(neuron.output)
         return outputs
 
-    # None -> [float ... float]
+    # None -> List<Float>
     # Returns all the weights of the layer
     def getWeights(self):
         weights = []
@@ -34,7 +34,7 @@ class Layer:
             weights.append(neuron.weight)
         return weights
 
-    # None -> [float ... float]
+    # None -> List<Float>
     # Return all the deltas of the layer
     def getDeltas(self):
         deltas = []
@@ -42,7 +42,7 @@ class Layer:
             deltas.append(neuron.delta)
         return deltas
 
-    # [float ... float] -> None
+    # List<Float> -> None
     # Updates the layer deltas
     def updateDeltas(self, deltalist):
         i = 0
@@ -50,7 +50,7 @@ class Layer:
             neuron.setDelta(deltalist[i])
             i+=1
 
-    # [float ... float], float -> None
+    # List<Float>, float -> None
     # Updates the weights and bias of the layer
     def updateWeightandBiasusingLR(self, input, lr):
         for neuron in self.myneurons:
