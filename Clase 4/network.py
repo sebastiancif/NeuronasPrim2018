@@ -35,6 +35,13 @@ class Network:
         return nextinput
 
 
+    # None -> List<float>
+    #  Obtiene el último output de la red
+    def getLastOutput(self):
+        last = self.nlastlayer
+        return self.mylayers[last].getOutputs()
+
+
     # List<float> List<float> -> None
     # Trains the network using the given inputs and desiredoutputs
     def train(self, input, desiredoutput, learningrate = 0.2):
@@ -80,7 +87,7 @@ class Network:
 
 
 ##-----------------------------
-
+'''
     # string, string, [float] -> List<List<float>>
     # Entrena a la red con una línea de string, separada por el indicador separator
     def trainLine(self, line, separator, learningrate = 0.2):
@@ -111,3 +118,4 @@ class Network:
         errorvector
         if(unsortepoch):
             os.remove(input)
+'''
