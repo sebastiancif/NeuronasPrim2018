@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import minmax_scale
 import matplotlib
 import matplotlib.pyplot as plt
+from time import sleep
 
 
 #--------------------#
@@ -117,8 +118,8 @@ class Network:
             dt = numpy.loadtxt(dtname,delimiter = ",") #Cargamos el dataset csv
         except:
             print("No se encuentra el archivo "+dtname)
+            return
         rows, cols = dt.shape
-        print("Trabajando con un dataset de "+str(rows)+" observaciones, con "+str(cols)+" atributos cada una. Número de épocas: "+str(nepoch))
         X = dt[:,0:cols-1] #split en datos y clases
         X_norm = minmax_scale(X) #Normalizamos los datos con el criterio visto en clases
         y = dt[:,cols-1:]
@@ -127,43 +128,71 @@ class Network:
         error = []
         precision = []
         epochs = list(range(nepoch))
+        print("Trabajando con un dataset de "+str(rows)+" observaciones, con "+str(cols)+" atributos cada una")
+        print("Número de épocas: "+str(nepoch))
+        print("¿Se reordena el training set en cada epoch?: "+str(randshuffle))
+        print("Learning rate de la red: "+str(learningrate))
+        print("Cantidad de clases del dataset: "+str(numofclasses))
+        sleep(2)
+        print("Inicio de computo por epochs, esto toma tiempo...")
         for epoch in epochs:
-            print("Inicio epoch "+str(epoch)+"...")
             if(randshuffle): #Mezclamos el orden de las tuplas en caso de quererlo
                 X_train, y_train = shuffle(X_train, y_train)
-            #Inicio de training
-            totalerror = 0
-            for i in range(len(X_train)):
-                expected = classVector(y_train[i],numofclasses) #Generamos el vector de clase deseado
-                self.train(X_train[i].tolist(), expected, learningrate) #Entrenamos a la red
-                errorvector = numpy.asarray(expected) - numpy.asarray(self.getLastOutput()) #Comparamos output y expected
-                squarevector = errorvector**2
-                totalerror += squarevector.sum() #Guardamos el error cuadrático
-            meanerror = (totalerror*1.0)/len(X_train) #Sacamos la media de los errores
-            error.append(meanerror)
-            #Fin de training, se acumula error en el vector correspondiente
-            #Inicio de testing
-            hits = 0
-            for j in range(len(X_test)):
-                output = self.feed(X_test[j])
-                binOutput = toBin(output) #Discretizamos el vector de salida
-                expected = classVector(y_test[j],numofclasses)
-                if(expected == binOutput):
-                    hits += 1 #Si son iguales, entonces es un acierto
-            epochprec = hits*1.0/len(X_test)
-            precision.append(epochprec)
-            print("Fin epoch "+str(epoch)+"!")
-            #Fin de testing, se acumula la precision en el vector correspondiente
+            if(epoch == 0): #Anotamos valores sin training alguno de la red
+                totalerror = 0
+                for i in range(len(X_train)):
+                    expected = classVector(y_train[i],numofclasses) #Generamos el vector de clase deseado
+                    raw_output = self.feed(X_train[i]) #Output sin entrenar
+                    errorvector = numpy.asarray(expected) - numpy.asarray(raw_output) #Comparamos output y expected
+                    squarevector = errorvector**2
+                    totalerror += squarevector.sum() #Guardamos el error cuadrático
+                meanerror = (totalerror*1.0)/len(X_train) #Sacamos la media de los errores
+                error.append(meanerror)
+                #Fin de check de errores sin training
+                #Calculo de precision sin training
+                hits = 0
+                for j in range(len(X_test)):
+                    output = self.feed(X_test[j])
+                    binOutput = toBin(output) #Discretizamos el vector de salida
+                    expected = classVector(y_test[j],numofclasses)
+                    if(expected == binOutput):
+                        hits += 1 #Si son iguales, entonces es un acierto
+                epochprec = hits*1.0/len(X_test)
+                precision.append(epochprec)
+                print("Fin epoch "+str(epoch)+"!")
+                #Fin de testing, se acumula la precision en el vector correspondiente
+            else:
+                #Inicio de training
+                totalerror = 0
+                for i in range(len(X_train)):
+                    expected = classVector(y_train[i],numofclasses) #Generamos el vector de clase deseado
+                    self.train(X_train[i], expected, learningrate) #Entrenamos a la red
+                    errorvector = numpy.asarray(expected) - numpy.asarray(self.getLastOutput()) #Comparamos output y expected
+                    squarevector = errorvector**2
+                    totalerror += squarevector.sum() #Guardamos el error cuadrático
+                meanerror = (totalerror*1.0)/len(X_train) #Sacamos la media de los errores
+                error.append(meanerror)
+                #Fin de training, se acumula error en el vector correspondiente
+                #Inicio de testing
+                hits = 0
+                for j in range(len(X_test)):
+                    output = self.feed(X_test[j])
+                    binOutput = toBin(output) #Discretizamos el vector de salida
+                    expected = classVector(y_test[j],numofclasses)
+                    if(expected == binOutput):
+                        hits += 1 #Si son iguales, entonces es un acierto
+                epochprec = hits*1.0/len(X_test)
+                precision.append(epochprec)
+                print("Fin epoch "+str(epoch)+"!")
+                #Fin de testing, se acumula la precision en el vector correspondiente
+        plotcond = "Learning rate ="+str(learningrate)+", Row Shuffle="+str(randshuffle)
+        plt.subplot(2, 1, 1)
+        plt.plot(epochs,error, '.-')
+        plt.title(plotcond)
+        plt.ylabel("Error cuadratico")
 
-        plt.figure(1)
-        plt.subplot(211)
-        plt.plot(epochs,error)
-        plt.subplot(212)
-        plt.plot(epochs,precision)
+        plt.subplot(2, 1, 2)
+        plt.plot(epochs,precision, '.-')
+        plt.xlabel("Epoch")
+        plt.ylabel("Precision")
         plt.show()
-
-def main():
-    nw1 = Network(4,9,[9,18,18,3])
-    nw1.dataClasification("cmc.csv",30, learningrate = 0.5, randshuffle = True)
-    nw2 = Network(4,9,[9,18,18,3])
-    nw2.dataClasification("cmc.csv",30, learningrate = 0.5, randshuffle = False)
