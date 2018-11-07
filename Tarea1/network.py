@@ -6,6 +6,7 @@ from sklearn.preprocessing import minmax_scale
 import matplotlib
 import matplotlib.pyplot as plt
 from time import sleep
+import time
 
 
 #--------------------#
@@ -113,7 +114,7 @@ class Network:
     # string, int, [float], [boolean] -> None
     # Given a csv file name (e.g: "data.csv"), trains a classificator network by nepoch epochs
     # plotting the cuadratic error and precison obtained.
-    def dataClasification(self, dtname, nepoch, learningrate = 0.2, randshuffle = False):
+    def dataClasification(self, dtname, nepoch, learningrate = 0.2, randshuffle = False, timer = False):
         try:
             dt = numpy.loadtxt(dtname,delimiter = ",") #Cargamos el dataset csv
         except:
@@ -127,7 +128,7 @@ class Network:
         X_train, X_test, y_train, y_test = train_test_split(X_norm, y, test_size = 0.33, random_state = 27) #Separamos los datos en train/test
         error = []
         precision = []
-        epochs = list(range(nepoch))
+        epochs = list(range(nepoch+1))
         print("Trabajando con un dataset de "+str(rows)+" observaciones, con "+str(cols)+" atributos cada una")
         print("Número de épocas: "+str(nepoch))
         print("¿Se reordena el training set en cada epoch?: "+str(randshuffle))
@@ -135,6 +136,7 @@ class Network:
         print("Cantidad de clases del dataset: "+str(numofclasses))
         sleep(2)
         print("Inicio de computo por epochs, esto toma tiempo...")
+        start_time = time.time()
         for epoch in epochs:
             if(randshuffle): #Mezclamos el orden de las tuplas en caso de quererlo
                 X_train, y_train = shuffle(X_train, y_train)
@@ -185,7 +187,15 @@ class Network:
                 precision.append(epochprec)
                 print("Fin epoch "+str(epoch)+"!")
                 #Fin de testing, se acumula la precision en el vector correspondiente
-        plotcond = "Learning rate ="+str(learningrate)+", Row Shuffle="+str(randshuffle)
+        tiempo = round(time.time() - start_time, 3)
+        if(timer):
+            print("Tiempo de proceso: "+str(tiempo)+" segundos")
+            return
+        fullerror = numpy.asarray(error[1:]).sum()
+        fullprecision = numpy.asarray(precision[1:]).sum()
+        finalerror = round(fullerror/nepoch,3)
+        finalprecision = round(fullprecision/nepoch, 3)
+        plotcond = "Learning rate ="+str(learningrate)+", Row Shuffle="+str(randshuffle)+", (meanerror, meanprecision) = ("+str(finalerror)+", "+str(finalprecision)+")"
         plt.subplot(2, 1, 1)
         plt.plot(epochs,error, '.-')
         plt.title(plotcond)
