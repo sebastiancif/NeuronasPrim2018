@@ -111,12 +111,11 @@ class GeneticAlgorithm:
     def run(self):
         print("Iniciando algoritmo!")
         print(f"Poblacion de {self.npop} individuos")
-        self.pop = self.fitpop = self.matinpool = []
+        self.pop = self.fitpop = self.matingpool = []
         self.initPop()
         generation = 0
         while(generation < 2000):
             self.fitPopulation()
-            print(self.pop)
             b, index = self.goalReached()
             if b:
                 print(f"Terminado en generacion {generation}, elemento")

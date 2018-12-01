@@ -17,6 +17,12 @@ def newDM(ncities):
         distmatrix.append(citierow)
     return distmatrix
 
+# float, int -> list<list<int>>
+# Generates a random matrix of distances using a choosen seed
+def detDM(seed, ncities):
+    random.seed(seed)
+    return newDM(ncities)
+
 #Class that stores a distance matrix for a group of cities
 class Tour:
     # list<list<float>>, int -> Tour
@@ -63,13 +69,13 @@ class Tour:
         #Luego mutamos al individuo con swap
         for i in range(len(newpath)):
             if (random.random()<=mutationrate):
-                j = random.randint(0,len(newpath))
+                j = random.randint(0,len(newpath)-1)
                 while(j==i):
-                    j = random.randint(0,len(newpath))
+                    j = random.randint(0,len(newpath)-1)
                 newpath[i] , newpath[j] = newpath[j] , newpath[i]
         distance = self.pathDistance(newpath)
         return Route(newpath, distance)
-        
+
 
 
 class Route(Tour):
