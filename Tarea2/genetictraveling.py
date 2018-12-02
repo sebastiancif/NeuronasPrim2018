@@ -1,7 +1,9 @@
-from route import detDM, Tour, Route
+from route import newDM, Tour, Route
 import random
 from itertools import permutations
 from math import ceil, sqrt
+#--------------------------------------------
+
 # Route -> float
 # Given a route, calculates the fitness of it
 def fitFun(route):
@@ -18,7 +20,7 @@ class GenAlg:
     def __init__(self, npop, ngen, tour):
         self.npop = npop
         self.ngen = ngen
-        self.k = int(npop*3/4)
+        self.k = ceil(npop*3/4)
         self.tour = tour
         self.pop = []
         self.matingpool = []
@@ -92,7 +94,7 @@ class GenAlg:
         print(f"Mejor individuo luego de {generation} generaciones")
         print(f"Distancia del camino: {self.best.getDistance()}")
         print(f"Ruta: {self.best.getPath()}")
-        return
+        return self.best.getDistance()
 
 def main():
     matrix5 = [[0,1,6,6,5],
@@ -110,9 +112,20 @@ def main():
                 [11,11,11,11,11,11,7,0,8,11],
                 [11,11,11,11,11,11,11,8,0,9],
                 [10,11,11,11,11,11,11,11,9,0]]
-    tour = Tour(matrix10)
-    gw = GenAlg(50, 20, tour)
-    gw.run()
+
+    tour5 = Tour(matrix5)
+    tour10 = Tour(newDM(10))
+    gw5 = GenAlg(5, 100, tour5)
+    gw10 = GenAlg(50, 100, tour10)
+    print("Algoritmo para matrix de 5x5, mejor camino de largo 15")
+    for i in matrix5:
+        print(i)
+    gw5.run()
+    print("")
+    print("Algoritmo para matrix de 10x10, mejor camino de largo ")
+    for i in matrix10:
+        print(i)
+    gw10.run()
 
 if __name__ == '__main__':
     main()

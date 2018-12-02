@@ -49,7 +49,7 @@ class GeneticAlgorithm:
         self.pop = [] #Poblacion
         self.npop = npop #Cantidad de poblacion
         self.nparents = numParents(npop) #Cantidad de padres necesarios para generar npop
-        self.ktour = int(3*npop/4) #Cantidad de competidores en un tournament
+        self.ktour = ceil(3*npop/4) #Cantidad de competidores en un tournament
         self.fitpop = [] #Indice de fitness de cada miembro de la poblacion
         self.matingpool = [] #Arreglo para padres de siguientes generaciones
         self.genfun = genfunc #Funcion generadora de elementos
@@ -118,18 +118,22 @@ class GeneticAlgorithm:
             self.fitPopulation()
             b, index = self.goalReached()
             if b:
-                print(f"Terminado en generacion {generation}, elemento")
+                print(f"Terminado en generacion {generation}, elemento hallado:")
                 print(''.join(self.pop[index]))
-                return
+                return generation
             self.makeNewGen()
             generation+=1
         print(f"Pasaron {generation} generaciones, mejor valor")
         print(self.pop[index])
+        return generation
 
 def main():
-
-    ga = GeneticAlgorithm(100, genRanWord(22), fitnessGoal("sandritatieneojoscafes"))
-    ga.run()
+    ga1 = GeneticAlgorithm(20, genRanWord(5), fitnessGoal("perro"))
+    ga1.run()
+    ga2 = GeneticAlgorithm(50, genRanWord(15), fitnessGoal("caballitoblanco"))
+    ga2.run()
+    ga3 = GeneticAlgorithm(100, genRanWord(30), fitnessGoal("unavezandandoporunparqueingles"))
+    ga3.run()
 
 if __name__ == '__main__':
     main()
