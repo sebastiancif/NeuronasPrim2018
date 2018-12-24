@@ -7,25 +7,6 @@ from copy import deepcopy
 # https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
 #-----------------------------
 
-# Node -> None
-# Prints a tree
-def printTree(root):
-    actuals = [root]
-    fullprints = []
-    while actuals:
-        next = []
-        prints = []
-        for node in actuals:
-            if node is None:
-                prints.append("_")
-                continue
-            else:
-                prints.append(str(node.value))
-            next.append(node.left)
-            next.append(node.right)
-        print(' '.join(prints))
-        actuals = next
-
 # Node, int .> None
 # Aux function used in print2D
 # Source: https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
@@ -86,7 +67,7 @@ class Node:
     #Para setear y obtener los valores de un nodo podemos usar
     #getattr(obj,atr) y setattr(obj,atr,newatr)
 
-class TreeGenerator:
+class FunTreeGenerator:
     # param ops: Set of operations for the expression tree
     # type ops : list<string>
     # param terms: Set of terminals for the expression tree
@@ -98,7 +79,7 @@ class TreeGenerator:
                     '+' : lambda a,b: a+b,
                     '-' : lambda a,b: a-b,
                     '*' : lambda a,b: a*b,
-                    '/' : lambda a,b: a/b
+                    '/' : lambda a,b: a/b,
                     '%' : lambda a,b: a%b,
         }
 
@@ -179,36 +160,39 @@ class TreeGenerator:
         return nodes[0]
 
     # Node -> int
-    # Evaluates a given expression tree
-    def evalTree(self, root):
+    # Evaluates a given expression tree with 1 variable
+    def evalTree(self, root, val):
         if root.right == root.left == None:
-            return root.value
+            if type(root.value) == str:
+                return val
+            else:
+                return root.value
         else:
-            return self.opsdict[root.value](self.evalTree(root.left),self.evalTree(root.right))
+            return self.opsdict[root.value](self.evalTree(root.left, val),self.evalTree(root.right, val))
 
 
 
 def main():
     ops = ['*','+','-']
-    terms = [19,7,40,3]
-    tg = TreeGenerator(ops, terms)
+    terms = [19,7,40,3, 'x']
+    tg = FunTreeGenerator(ops, terms)
     t1 = tg.makeTree(3)
     t2 = tg.makeTree(3)
     t3 = tg.makeTree(3)
     print2D(t1)
     print("------------------------------")
-    print(tg.evalTree(t1))
+    print(tg.evalTree(t1, 5))
     print2D(t2)
     print("------------------------------")
-    print(tg.evalTree(t2))
+    print(tg.evalTree(t2, 5))
     print2D(t3)
     print("------------------------------")
-    print(tg.evalTree(t3))
+    print(tg.evalTree(t3, 5))
 
 def gimmeTree():
     ops = ['*','+','-']
-    terms = [19,7,40,3]
-    tg = TreeGenerator(ops, terms)
+    terms = [19,7,40,3, 'x']
+    tg = FunTreeGenerator(ops, terms)
     t1 = tg.makeTree(3)
     return t1
 
