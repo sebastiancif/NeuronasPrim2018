@@ -1,6 +1,9 @@
 import optree
 import random
 import math
+
+
+
 class NumGuesser:
     #param operations: the set of operations valid for the trees
     #type operations: list<string>
@@ -26,6 +29,7 @@ class NumGuesser:
         self.maxdeep = maxdeep
         self.best = None
         self.bestind = -1
+
     def initPopulation(self):
         for i in range(self.npop):
             self.pop.append(self.generator.makeTree(self.maxdeep))
@@ -114,13 +118,22 @@ def main():
     ops = ['*','+','-']
     terms = [19,7,40,3]
     #ops, terms, answer, npop, ngen, maxdeep
-    ng = NumGuesser(ops, terms, 147, 500, 30,3)
+    ng = NumGuesser(ops, terms, 147, 500, 50,3)
+    print(f"Terminales: {terms}")
+    print(f"Operaciones: {ops}")
     ng.run()
     ops2 = ['*','+']
     terms2 = [10,1,25,9,3,6]
-    ng2 = NumGuesser(ops2,terms2,595,500,30,3)
+    ng2 = NumGuesser(ops2,terms2,595,500,50,3)
+    print(f"Terminales: {terms2}")
+    print(f"Operaciones: {ops2}")
     ng2.run()
-
+    ops3 = ['*','+','-','/']
+    terms3 = [25,7,8,100,4,2]
+    ng3 = NumGuesser(ops3,terms3,459,500,50,3)
+    print(f"Terminales: {terms3}")
+    print(f"Operaciones: {ops3}")
+    ng3.run()
 
 if __name__ == '__main__':
     main()

@@ -75,6 +75,19 @@ def moveNode(frm, to):
     frm.right = to.right
     frm.left = to.left
 
+# float, float -> float
+# En caso de existir divsion por cero, aproxima a 1e-06
+def division(a,b):
+    if b == 0:
+        b = 0.000001
+    return a/b
+# float, float -> float
+# En caso de existir division por cero, aproxima a 1e-06
+def securedivison(a,b):
+    if b == 0:
+        b = 0.000001
+    return a%b
+
 
 
 class Node:
@@ -98,8 +111,8 @@ class TreeGenerator:
                     '+' : lambda a,b: a+b,
                     '-' : lambda a,b: a-b,
                     '*' : lambda a,b: a*b,
-                    '/' : lambda a,b: a/b
-                    '%' : lambda a,b: a%b,
+                    '/' : division,
+                    '%' : securedivison,
         }
 
     # int -> list<int|float|string>
@@ -185,32 +198,3 @@ class TreeGenerator:
             return root.value
         else:
             return self.opsdict[root.value](self.evalTree(root.left),self.evalTree(root.right))
-
-
-
-def main():
-    ops = ['*','+','-']
-    terms = [19,7,40,3]
-    tg = TreeGenerator(ops, terms)
-    t1 = tg.makeTree(3)
-    t2 = tg.makeTree(3)
-    t3 = tg.makeTree(3)
-    print2D(t1)
-    print("------------------------------")
-    print(tg.evalTree(t1))
-    print2D(t2)
-    print("------------------------------")
-    print(tg.evalTree(t2))
-    print2D(t3)
-    print("------------------------------")
-    print(tg.evalTree(t3))
-
-def gimmeTree():
-    ops = ['*','+','-']
-    terms = [19,7,40,3]
-    tg = TreeGenerator(ops, terms)
-    t1 = tg.makeTree(3)
-    return t1
-
-if __name__ == '__main__':
-    main()

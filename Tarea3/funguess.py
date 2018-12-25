@@ -123,6 +123,7 @@ class FunGuesser:
         print("------------------------")
         funtree.print2D(self.best)
 
+
 def main():
     ops = ['*','+','-']
     terms = random.sample(range(101), 10)
@@ -133,6 +134,9 @@ def main():
     #operations, terminals, function, interval, lenpopulation, maxgen, maxdeep
     fg = FunGuesser(ops, terms, fun, interval, 500, 50, 4)
     print("Probando para f(x) = x³+2x+10")
+    print(f"Intervalo: [{interval[0]}, {interval[-1]}]")
+    print(f"Operaciones: {ops}")
+    print(f"Terminales: {terms}")
     fg.run()
     ops2 = ['*','+','-','%']
     terms2 = random.sample(range(-5,5), 10)
@@ -142,7 +146,22 @@ def main():
     interval2 = floatrange(-1,1,0.1)
     fg2 = FunGuesser(ops2, terms2, fun2, interval2, 500, 50, 4)
     print("Probando para f(x) = x²+x+1")
+    print(f"Intervalo: [{interval2[0]}, {interval2[-1]}]")
+    print(f"Operaciones: {ops2}")
+    print(f"Terminales: {terms2}")
     fg2.run()
+    ops3 = ['*','+','-']
+    terms3 = random.sample(range(-5,5), 10)
+    for i in range(10):
+        terms3.append('x')
+    fun3 = lambda x: 3*x+7
+    interval3 = floatrange(-1,1,0.1)
+    fg3 = FunGuesser(ops3, terms3, fun3, interval3, 500, 50, 4)
+    print("Probando para f(x) = 3x+7")
+    print(f"Intervalo: [{interval3[0]}, {interval3[-1]}]")
+    print(f"Operaciones: {ops3}")
+    print(f"Terminales: {terms3}")
+    fg3.run()
 
 
 if __name__ == '__main__':
